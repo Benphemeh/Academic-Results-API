@@ -1,3 +1,68 @@
+# Academic Results API
+
+This project is a RESTful API that allows for storing and managing academic results for students. It supports both single result submissions and bulk uploads via JSON or CSV files. Bulk processing is handled in the background using a queue (BullMQ) with Redis.
+
+## Features
+
+- **Single Student Result Submission**: Submit detailed academic results for a single student.
+- **Bulk Result Submission**: Upload results for multiple students using JSON or CSV, with background processing.
+- **Validation**: Full validation for input data to ensure correctness.
+
+## Technologies
+
+- [NestJS](https://nestjs.com/)
+- [BullMQ](https://docs.bullmq.io/) (Background job processing)
+- [Redis](https://redis.io/) (Queue system)
+- [Multer](https://github.com/expressjs/multer) (File uploading)
+- [TypeScript](https://www.typescriptlang.org/)
+
+## Installation
+
+### Prerequisites
+
+Ensure you have the following installed on your machine:
+
+- Node.js (>= 16.x.x)
+- Redis (for background processing)
+
+### Steps
+
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/your-username/academic-results-api.git
+    cd academic-results-api
+    ```
+
+2. Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+3. Set up environment variables:
+
+    Create a `.env` file in the root directory and add the necessary configuration:
+
+    ```env
+    REDIS_HOST=localhost
+    REDIS_PORT=6379
+    ```
+
+4. Start Redis:
+
+    If Redis is not running, you can start it with:
+
+    ```bash
+    redis-server
+    ```
+
+## Running the Application
+
+To start the application, run:
+
+```bash
+npm run start
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
