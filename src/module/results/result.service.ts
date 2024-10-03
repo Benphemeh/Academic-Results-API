@@ -61,3 +61,16 @@ export class ResultService {
     return this.resultRepo.save(result);
   }
 }
+
+// async processBulkResults(bulkResultDto: BulkResultDto) {
+//   for (const createResultDto of bulkResultDto.results)
+//     let student = await this.studentRepo.findOne({
+//       where: { studentId: createResultDto.studentId },
+//     });
+//     if (!student) {
+//       student = this.studentRepo.create({
+//         studentId: createResultDto.studentId,
+//         name: createResultDto.name,
+//       });
+//       await this.studentRepo.save(student);
+//   }
