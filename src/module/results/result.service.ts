@@ -1,4 +1,3 @@
-// result.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -7,10 +6,13 @@ import { Student } from 'src/core/database/entity/student.entity';
 import { Session } from 'src/core/database/entity/session.entity';
 import { Semester } from 'src/core/database/entity/semester.entity';
 import { CreateResultDto } from './dto/create-result.dto';
+// import { Queue } from 'bull';
+// import { InjectQueue } from '@nestjs/bull';
 
 @Injectable()
 export class ResultService {
   constructor(
+    // @InjectQueue('results') private resultsQueue: Queue<Queue>,
     @InjectRepository(Result) private resultRepo: Repository<Result>,
     @InjectRepository(Student) private studentRepo: Repository<Student>,
     @InjectRepository(Session) private sessionRepo: Repository<Session>,
@@ -39,7 +41,6 @@ export class ResultService {
       await this.sessionRepo.save(session);
     }
 
-    // Find or create semester
     let semester = await this.semesterRepo.findOne({
       where: { name: createResultDto.semester },
     });
@@ -47,8 +48,6 @@ export class ResultService {
       semester = this.semesterRepo.create({ name: createResultDto.semester });
       await this.semesterRepo.save(semester);
     }
-
-    // Create and save result
     const result = this.resultRepo.create({
       student: student,
       session: session.session,
@@ -60,4 +59,28 @@ export class ResultService {
 
     return this.resultRepo.save(result);
   }
+
+  //   const savedResult = await this.resultRepo.save(result);
+
+  //   await this.addResultToQueue(savedResult); // Call the new method with the saved result
+
+  //   return savedResult;
+  // }
+
+  // async addResultToQueue(data: any) {
+  //   await this.queueService.addToQueue('results', data); // Add the result to the queue
+  // }
 }
+
+// async processBulkResults(bulkResultDto: BulkResultDto) {
+//   for (const createResultDto of bulkResultDto.results)
+//     let student = await this.studentRepo.findOne({
+//       where: { studentId: createResultDto.studentId },
+//     });
+//     if (!student) {
+//       student = this.studentRepo.create({
+//         studentId: createResultDto.studentId,
+//         name: createResultDto.name,
+//       });
+//       await this.studentRepo.save(student);
+//   }

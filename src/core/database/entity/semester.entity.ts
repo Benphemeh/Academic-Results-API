@@ -7,7 +7,7 @@ export class Semester {
   id: string;
 
   @Column({ unique: true })
-  name: string; // Values: "First", "Second", "Summer"
+  name: string;
 
   @OneToMany(() => Result, (result) => result.semester)
   results: Result[];

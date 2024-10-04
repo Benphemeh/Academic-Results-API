@@ -24,7 +24,7 @@ export class ResultsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createResult(@Body() createResultDto: CreateResultDto) {
-    const result = await this.resultsService.create(createResultDto);
+    const result = await this.resultsService.createResult(createResultDto);
     return result;
   }
 
@@ -44,17 +44,18 @@ export class ResultsController {
   )
   async bulkCreateResults(
     @Body() bulkResultDto: BulkResultDto,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file,
   ) {
     if (!file && !bulkResultDto) {
       throw new BadRequestException('No file or data uploaded.');
     }
+    console.log(file);
 
-    if (file) {
-      await this.resultsService.processCsvFile(file.path);
-    } else if (bulkResultDto) {
-      await this.resultsService.processBulkResults(bulkResultDto);
-    }
+    // if (file) {
+    //   await this.resultsService.processCsvFile(file.path);
+    // } else if (bulkResultDto) {
+    //   await this.resultsService.processBulkResults(bulkResultDto);
+    // }
 
     return { message: 'Bulk data is being processed.' };
   }

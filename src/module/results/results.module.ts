@@ -1,15 +1,17 @@
+import { ResultsProcessor } from './result.processor.js';
 import { Module } from '@nestjs/common';
-import { ResultsController } from './results.controller.js';
+import { ResultsController } from './result.controller.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
-import { BulkResultsProcessor } from './result.processor.js';
-import { Student } from 'src/core/database/entity/student.entity.js';
-import { Result } from 'src/core/database/entity/result.entity.js';
-import { Course } from 'src/core/database/entity/course.entity.js';
-
+import { Student } from 'src/core/database/entity/student.entity';
+import { Result } from 'src/core/database/entity/result.entity';
+import { Course } from 'src/core/database/entity/course.entity';
+import { ResultService } from './result.service.js';
+import { Session } from 'src/core/database/entity/session.entity';
+import { Semester } from 'src/core/database/entity/semester.entity';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Student, Result, Course]),
+    TypeOrmModule.forFeature([Student, Course, Result, Session, Semester]),
     BullModule.registerQueue({
       name: 'bulk-results-queue',
       redis: {
@@ -20,6 +22,7 @@ import { Course } from 'src/core/database/entity/course.entity.js';
     }),
   ],
   controllers: [ResultsController],
-  providers: [BulkResultsProcessor],
+  providers: [ResultService, ResultsProcessor],
+  exports: [ResultService],
 })
 export class ResultsModule {}
