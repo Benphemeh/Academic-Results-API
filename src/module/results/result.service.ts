@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Result } from 'src/core/database/entity/result.entity';
@@ -70,6 +70,48 @@ export class ResultService {
   // async addResultToQueue(data: any) {
   //   await this.queueService.addToQueue('results', data); // Add the result to the queue
   // }
+  async getAllResults() {
+    return this.resultRepo.find({ relations: ['student', 'semester'] });
+  }
+
+  async getResultById(id: number) {
+    return this.resultRepo.findOne({
+      where: { id: id.toString() },
+      relations: ['student', 'semester'],
+    });
+  }
+
+  async updateResult(id: number, updateResultDto: Partial<CreateResultDto>) {
+    const existingResult = await this.resultRepo.findOne({
+      where: { id: id.toString() },
+      relations: ['semester'],
+    });
+    if (!existingResult) {
+      throw new NotFoundException(`Result with ID ${id} not found`);
+    }
+
+    if (updateResultDto.semester) {
+      let semester = await this.semesterRepo.findOne({
+        where: { name: updateResultDto.semester },
+      });
+      if (!semester) {
+        semester = this.semesterRepo.create({ name: updateResultDto.semester });
+        await this.semesterRepo.save(semester);
+      }
+      existingResult.semester = semester;
+    }
+
+    Object.assign(existingResult, updateResultDto);
+    await this.resultRepo.save(existingResult);
+    return this.resultRepo.findOne({
+      where: { id: id.toString() },
+      relations: ['student', 'semester'],
+    });
+  }
+  async deleteResult(id: number) {
+    await this.resultRepo.delete(id);
+    return { message: `Result with ID ${id} deleted successfully.` };
+  }
 }
 
 // async processBulkResults(bulkResultDto: BulkResultDto) {

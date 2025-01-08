@@ -7,6 +7,10 @@ import {
   UploadedFile,
   UseInterceptors,
   BadRequestException,
+  Get,
+  Patch,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -58,5 +62,25 @@ export class ResultsController {
     // }
 
     return { message: 'Bulk data is being processed.' };
+  }
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async getResultById(@Param('id') id: number) {
+    return this.resultsService.getResultById(id);
+  }
+
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  async updateResult(
+    @Param('id') id: number,
+    @Body() updateResultDto: Partial<CreateResultDto>,
+  ) {
+    return this.resultsService.updateResult(id, updateResultDto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteResult(@Param('id') id: number) {
+    return this.resultsService.deleteResult(id);
   }
 }
