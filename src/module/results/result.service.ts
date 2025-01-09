@@ -12,13 +12,13 @@ import { CreateResultDto } from './dto/create-result.dto';
 @Injectable()
 export class ResultService {
   constructor(
+    // @InjectQueue('results') private readonly resultsQueue: Queue,
     // @InjectQueue('results') private resultsQueue: Queue<Queue>,
     @InjectRepository(Result) private resultRepo: Repository<Result>,
     @InjectRepository(Student) private studentRepo: Repository<Student>,
     @InjectRepository(Session) private sessionRepo: Repository<Session>,
     @InjectRepository(Semester) private semesterRepo: Repository<Semester>,
   ) {}
-
   async createResult(createResultDto: CreateResultDto) {
     // Find or create student
     let student = await this.studentRepo.findOne({

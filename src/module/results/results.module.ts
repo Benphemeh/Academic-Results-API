@@ -13,7 +13,7 @@ import { Semester } from 'src/core/database/entity/semester.entity';
   imports: [
     TypeOrmModule.forFeature([Student, Course, Result, Session, Semester]),
     BullModule.registerQueue({
-      name: 'bulk-results-queue',
+      name: 'results',
       redis: {
         host: process.env.REDIS_HOST,
         port: parseInt(process.env.REDIS_PORT),
