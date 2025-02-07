@@ -20,7 +20,6 @@ export class ResultService {
     @InjectRepository(Semester) private semesterRepo: Repository<Semester>,
   ) {}
   async createResult(createResultDto: CreateResultDto) {
-    // Find or create student
     let student = await this.studentRepo.findOne({
       where: { studentId: createResultDto.studentId },
     });
@@ -32,7 +31,6 @@ export class ResultService {
       await this.studentRepo.save(student);
     }
 
-    // Find or create session
     let session = await this.sessionRepo.findOne({
       where: { session: createResultDto.session },
     });
@@ -113,16 +111,3 @@ export class ResultService {
     return { message: `Result with ID ${id} deleted successfully.` };
   }
 }
-
-// async processBulkResults(bulkResultDto: BulkResultDto) {
-//   for (const createResultDto of bulkResultDto.results)
-//     let student = await this.studentRepo.findOne({
-//       where: { studentId: createResultDto.studentId },
-//     });
-//     if (!student) {
-//       student = this.studentRepo.create({
-//         studentId: createResultDto.studentId,
-//         name: createResultDto.name,
-//       });
-//       await this.studentRepo.save(student);
-//   }

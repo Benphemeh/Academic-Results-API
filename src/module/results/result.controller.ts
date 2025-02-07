@@ -23,8 +23,6 @@ import { ResultService } from './result.service';
 @Controller('results')
 export class ResultsController {
   constructor(private readonly resultsService: ResultService) {}
-
-  // Single result endpoint
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createResult(@Body() createResultDto: CreateResultDto) {
@@ -38,7 +36,7 @@ export class ResultsController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: './uploads', // Save CSV to uploads folder
+        destination: './uploads',
         filename: (req, file, cb) => {
           const filename = `${Date.now()}-${file.originalname}`;
           cb(null, filename);
