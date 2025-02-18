@@ -52,12 +52,6 @@ export class ResultsController {
     }
     console.log(file);
 
-    // if (file) {
-    //   await this.resultsService.processCsvFile(file.path);
-    // } else if (bulkResultDto) {
-    //   await this.resultsService.processBulkResults(bulkResultDto);
-    // }
-
     return { message: 'Bulk data is being processed.' };
   }
   @Get(':id')

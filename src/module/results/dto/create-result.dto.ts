@@ -21,9 +21,6 @@ export class CreateResultDto {
   name: string;
 
   @IsString()
-  @Matches(/^\d{4}\/\d{4}$/, {
-    message: "Session format should be 'YYYY/YYYY'",
-  })
   session: string;
 
   @IsString()
