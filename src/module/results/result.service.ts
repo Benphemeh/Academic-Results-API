@@ -58,16 +58,6 @@ export class ResultService {
     return this.resultRepo.save(result);
   }
 
-  //   const savedResult = await this.resultRepo.save(result);
-
-  //   await this.addResultToQueue(savedResult); // Call the new method with the saved result
-
-  //   return savedResult;
-  // }
-
-  // async addResultToQueue(data: any) {
-  //   await this.queueService.addToQueue('results', data); // Add the result to the queue
-  // }
   async getAllResults() {
     return this.resultRepo.find({ relations: ['student', 'semester'] });
   }
