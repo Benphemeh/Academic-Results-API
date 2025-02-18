@@ -30,7 +30,6 @@ export class ResultsController {
     return result;
   }
 
-  // Bulk results endpoint (JSON or CSV)
   @Post('bulk')
   @HttpCode(HttpStatus.ACCEPTED)
   @UseInterceptors(
