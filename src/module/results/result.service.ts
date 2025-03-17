@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Result } from 'src/core/database/entity/result.entity';
@@ -20,6 +24,15 @@ export class ResultService {
     @InjectRepository(Semester) private semesterRepo: Repository<Semester>,
   ) {}
   async createResult(createResultDto: CreateResultDto) {
+    // Validate input data
+    if (
+      !createResultDto.studentId ||
+      !createResultDto.session ||
+      !createResultDto.semester
+    ) {
+      throw new BadRequestException('Missing required fields');
+    }
+
     let student = await this.studentRepo.findOne({
       where: { studentId: createResultDto.studentId },
     });
