@@ -11,6 +11,9 @@ import {
   Patch,
   Delete,
   Param,
+  UsePipes,
+  ValidationPipe,
+  Logger,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -22,10 +25,13 @@ import { ResultService } from './result.service';
 
 @Controller('results')
 export class ResultsController {
+  private readonly logger = new Logger(ResultsController.name);
   constructor(private readonly resultsService: ResultService) {}
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async createResult(@Body() createResultDto: CreateResultDto) {
+    this.logger.log('Creating a new result');
     const result = await this.resultsService.createResult(createResultDto);
     return result;
   }
@@ -54,9 +60,11 @@ export class ResultsController {
 
     return { message: 'Bulk data is being processed.' };
   }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async getResultById(@Param('id') id: number) {
+    this.logger.log(`Fetching result with ID ${id}`);
     return this.resultsService.getResultById(id);
   }
 
