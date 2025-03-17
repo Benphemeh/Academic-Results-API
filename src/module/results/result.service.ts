@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,6 +16,7 @@ import { CreateResultDto } from './dto/create-result.dto';
 
 @Injectable()
 export class ResultService {
+  private readonly logger = new Logger(ResultService.name);
   constructor(
     // @InjectQueue('results') private readonly resultsQueue: Queue,
     // @InjectQueue('results') private resultsQueue: Queue<Queue>,
@@ -72,14 +74,20 @@ export class ResultService {
   }
 
   async getAllResults() {
+    this.logger.log('Fetching all results');
     return this.resultRepo.find({ relations: ['student', 'semester'] });
   }
 
   async getResultById(id: number) {
-    return this.resultRepo.findOne({
+    this.logger.log(`Fetching result with ID ${id}`);
+    const result = await this.resultRepo.findOne({
       where: { id: id.toString() },
       relations: ['student', 'semester'],
     });
+    if (!result) {
+      throw new NotFoundException(`Result with ID ${id} not found`);
+    }
+    return result;
   }
 
   async updateResult(id: number, updateResultDto: Partial<CreateResultDto>) {
