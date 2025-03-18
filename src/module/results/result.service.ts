@@ -61,7 +61,6 @@ export class ResultService {
       semester = this.semesterRepo.create({ name: createResultDto.semester });
       await this.semesterRepo.save(semester);
     }
-    // Create result
     const result = this.resultRepo.create({
       student: student,
       session: session.session,
