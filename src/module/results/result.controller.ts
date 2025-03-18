@@ -75,7 +75,7 @@ export class ResultsController {
     @Param('id') id: number,
     @Body() updateResultDto: Partial<CreateResultDto>,
   ) {
-    this.logger.log(`Updating result with ID ${id}`);
+    this.logger.log(`Updating result with id ${id}`);
     return this.resultsService.updateResult(id, updateResultDto);
   }
 

@@ -54,8 +54,6 @@ export class ResultService {
       session = this.sessionRepo.create({ session: createResultDto.session });
       await this.sessionRepo.save(session);
     }
-
-    // Find or create semester
     let semester = await this.semesterRepo.findOne({
       where: { name: createResultDto.semester },
     });
