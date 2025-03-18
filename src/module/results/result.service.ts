@@ -46,6 +46,7 @@ export class ResultService {
       await this.studentRepo.save(student);
     }
 
+    // Find or create session
     let session = await this.sessionRepo.findOne({
       where: { session: createResultDto.session },
     });
@@ -54,6 +55,7 @@ export class ResultService {
       await this.sessionRepo.save(session);
     }
 
+    // Find or create semester
     let semester = await this.semesterRepo.findOne({
       where: { name: createResultDto.semester },
     });
@@ -61,6 +63,7 @@ export class ResultService {
       semester = this.semesterRepo.create({ name: createResultDto.semester });
       await this.semesterRepo.save(semester);
     }
+    // Create result
     const result = this.resultRepo.create({
       student: student,
       session: session.session,
