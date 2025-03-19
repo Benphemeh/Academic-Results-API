@@ -46,7 +46,7 @@ export class ResultService {
       await this.studentRepo.save(student);
     }
 
-    // Find or create session.
+    // Find or create session
     let session = await this.sessionRepo.findOne({
       where: { session: createResultDto.session },
     });
