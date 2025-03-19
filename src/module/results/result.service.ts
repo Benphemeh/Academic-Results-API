@@ -46,7 +46,7 @@ export class ResultService {
       await this.studentRepo.save(student);
     }
 
-    // Find or create session
+    // Find or create session.
     let session = await this.sessionRepo.findOne({
       where: { session: createResultDto.session },
     });
@@ -119,6 +119,6 @@ export class ResultService {
   }
   async deleteResult(id: number) {
     await this.resultRepo.delete(id);
-    return { message: `Result with ID ${id} deleted successfully.` };
+    return { message: `Result with id ${id} deleted successfully` };
   }
 }
