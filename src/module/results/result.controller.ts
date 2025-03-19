@@ -54,7 +54,7 @@ export class ResultsController {
     @UploadedFile() file,
   ) {
     if (!file && !bulkResultDto) {
-      throw new BadRequestException('No file or data uploaded.');
+      throw new BadRequestException('No file / data uploaded');
     }
     console.log(file);
 
