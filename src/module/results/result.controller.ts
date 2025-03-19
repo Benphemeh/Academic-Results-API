@@ -54,11 +54,11 @@ export class ResultsController {
     @UploadedFile() file,
   ) {
     if (!file && !bulkResultDto) {
-      throw new BadRequestException('No file or data uploaded.');
+      throw new BadRequestException('No file or data uploaded');
     }
     console.log(file);
 
-    return { message: 'Bulk data is being processed.' };
+    return { message: 'Bulk data is being processed' };
   }
 
   @Get(':id')
