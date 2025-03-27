@@ -5,7 +5,6 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  Matches,
   Max,
   Min,
   ValidateNested,
@@ -27,9 +26,9 @@ export class CreateResultDto {
   @IsIn(['First', 'Second', 'Summer'])
   semester: string;
 
-  @ValidateNested({ each: true })
+  // @ValidateNested({ each: true })
   @Type(() => CourseDto)
-  courses: CourseDto[];
+  courses: CourseDto;
 
   @IsOptional()
   @IsNumber()
