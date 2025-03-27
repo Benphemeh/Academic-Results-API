@@ -97,7 +97,7 @@ export class ResultService {
       relations: ['student', 'semester'],
     });
 
-    // Store in cache for future requests (TTL: 1 hour)
+    // Store in cache for future requests
     await this.cacheManager.set('all_results', results, 3600);
 
     return results;
