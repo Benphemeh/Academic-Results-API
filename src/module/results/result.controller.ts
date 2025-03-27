@@ -28,13 +28,19 @@ export class ResultsController {
   private readonly logger = new Logger(ResultsController.name);
   constructor(private readonly resultsService: ResultService) {}
   @Post()
-  @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async createResult(@Body() createResultDto: CreateResultDto) {
-    this.logger.log('Creating a new result');
-    const result = await this.resultsService.createResult(createResultDto);
-    return result;
+    this.logger.log('Creating result');
+    return this.resultsService.createResult(createResultDto);
   }
+  // @Post()
+  // @HttpCode(HttpStatus.CREATED)
+  // @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  // async createResult(@Body() createResultDto: CreateResultDto) {
+  //   this.logger.log('Creating a new result');
+  //   const result = await this.resultsService.createResult(createResultDto);
+  //   return result;
+  // }
 
   @Post('bulk')
   @HttpCode(HttpStatus.ACCEPTED)

@@ -19,7 +19,7 @@ export class Result {
   student: Student;
 
   @OneToMany(() => Course, (course) => course.result, { cascade: true })
-  courses: Course[];
+  courses: Course;
 
   @ManyToOne(() => Session, (session) => session.results)
   Session: Session[];
