@@ -1,11 +1,13 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Cache } from '@nestjs/cache-manager';
 import { Result } from 'src/core/database/entity/result.entity';
 import { Student } from 'src/core/database/entity/student.entity';
 import { Session } from 'src/core/database/entity/session.entity';
@@ -24,6 +26,7 @@ export class ResultService {
     @InjectRepository(Student) private studentRepo: Repository<Student>,
     @InjectRepository(Session) private sessionRepo: Repository<Session>,
     @InjectRepository(Semester) private semesterRepo: Repository<Semester>,
+    @Inject('CACHE_MANAGER') private cacheManager: Cache, // Inject Cache Manager
   ) {}
   async createResult(createResultDto: CreateResultDto) {
     // Validate input data
@@ -45,7 +48,6 @@ export class ResultService {
       });
       await this.studentRepo.save(student);
     }
-
     // Find or create session
     let session = await this.sessionRepo.findOne({
       where: { session: createResultDto.session },
@@ -70,12 +72,35 @@ export class ResultService {
       cgpa: createResultDto.cgpa,
     });
 
-    return this.resultRepo.save(result);
+    const savedResult = await this.resultRepo.save(result);
+
+    // Invalidate cache for getAllResults and student-specific results
+    await this.cacheManager.del('all_results');
+    await this.cacheManager.del(`student_results_${student.studentId}`);
+
+    return savedResult;
   }
 
   async getAllResults() {
     this.logger.log('Fetching all results');
-    return this.resultRepo.find({ relations: ['student', 'semester'] });
+
+    // Try to get from cache first
+    const cachedResults = await this.cacheManager.get('all_results');
+    if (cachedResults) {
+      this.logger.log('Returning results from cache');
+      return cachedResults;
+    }
+
+    // If not in cache, get from database
+    this.logger.log('Cache miss. Fetching results from database');
+    const results = await this.resultRepo.find({
+      relations: ['student', 'semester'],
+    });
+
+    // Store in cache for future requests (TTL: 1 hour)
+    await this.cacheManager.set('all_results', results, 3600);
+
+    return results;
   }
 
   async getResultById(id: number) {
