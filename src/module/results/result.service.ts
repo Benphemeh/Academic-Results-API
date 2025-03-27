@@ -105,13 +105,28 @@ export class ResultService {
 
   async getResultById(id: number) {
     this.logger.log(`Fetching result with ID ${id}`);
+
+    // Try to get from cache first
+    const cacheKey = `result_${id}`;
+    const cachedResult = await this.cacheManager.get(cacheKey);
+    if (cachedResult) {
+      this.logger.log(`Returning result with ID ${id} from cache`);
+      return cachedResult;
+    }
+
+    // If not in cache, get from database
     const result = await this.resultRepo.findOne({
       where: { id: id.toString() },
       relations: ['student', 'semester'],
     });
+
     if (!result) {
       throw new NotFoundException(`Result with ID ${id} not found`);
     }
+
+    // Store in cache for future requests (TTL: 1 hour)
+    await this.cacheManager.set(cacheKey, result, 3600);
+
     return result;
   }
 
