@@ -10,8 +10,6 @@ import dbconfig from 'ormconfig';
 @Module({
   imports: [
     TypeOrmModule.forRoot(dbconfig),
-
-    // Redis Cache Module
     CacheModule.register({
       isGlobal: true,
       store: redisStore,

@@ -129,12 +129,12 @@ export class ResultService {
 
     return result;
   }
-
   async updateResult(id: number, updateResultDto: Partial<CreateResultDto>) {
     const existingResult = await this.resultRepo.findOne({
       where: { id: id.toString() },
-      relations: ['semester'],
+      relations: ['semester', 'student'],
     });
+
     if (!existingResult) {
       throw new NotFoundException(`Result with ID ${id} not found`);
     }
@@ -150,15 +150,68 @@ export class ResultService {
       existingResult.semester = semester;
     }
 
+    const studentId = existingResult.student.studentId;
+
     Object.assign(existingResult, updateResultDto);
     await this.resultRepo.save(existingResult);
+
+    // Invalidate affected caches
+    await this.cacheManager.del(`result_${id}`);
+    await this.cacheManager.del('all_results');
+    await this.cacheManager.del(`student_results_${studentId}`);
+
     return this.resultRepo.findOne({
       where: { id: id.toString() },
       relations: ['student', 'semester'],
     });
   }
+
+  // async updateResult(id: number, updateResultDto: Partial<CreateResultDto>) {
+  //   const existingResult = await this.resultRepo.findOne({
+  //     where: { id: id.toString() },
+  //     relations: ['semester'],
+  //   });
+  //   if (!existingResult) {
+  //     throw new NotFoundException(`Result with ID ${id} not found`);
+  //   }
+
+  //   if (updateResultDto.semester) {
+  //     let semester = await this.semesterRepo.findOne({
+  //       where: { name: updateResultDto.semester },
+  //     });
+  //     if (!semester) {
+  //       semester = this.semesterRepo.create({ name: updateResultDto.semester });
+  //       await this.semesterRepo.save(semester);
+  //     }
+  //     existingResult.semester = semester;
+  //   }
+
+  //   Object.assign(existingResult, updateResultDto);
+  //   await this.resultRepo.save(existingResult);
+  //   return this.resultRepo.findOne({
+  //     where: { id: id.toString() },
+  //     relations: ['student', 'semester'],
+  //   });
+  // }
   async deleteResult(id: number) {
-    await this.resultRepo.delete(id);
+    const result = await this.resultRepo.findOne({
+      where: { id: id.toString() },
+      relations: ['student'],
+    });
+
+    if (result) {
+      const studentId = result.student.studentId;
+
+      await this.resultRepo.delete(id);
+
+      // Invalidate affected caches
+      await this.cacheManager.del(`result_${id}`);
+      await this.cacheManager.del('all_results');
+      await this.cacheManager.del(`student_results_${studentId}`);
+
+      return { message: `Result with id ${id} deleted successfully` };
+    }
+
     return { message: `Result with id ${id} deleted successfully` };
   }
 }
