@@ -86,7 +86,6 @@ export class ResultsController {
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteResult(@Param('id') id: number) {
     return this.resultsService.delete(id);
   }
