@@ -193,7 +193,7 @@ export class ResultService {
   //     relations: ['student', 'semester'],
   //   });
   // }
-  async deleteResult(id: number) {
+  async delete(id: number) {
     const result = await this.resultRepo.findOne({
       where: { id: id.toString() },
       relations: ['student'],
