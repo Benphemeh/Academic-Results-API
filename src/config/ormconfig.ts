@@ -34,20 +34,20 @@ import { Session } from 'src/core/database/entity/session.entity';
 dotenv.config();
 
 const dbconfig: TypeOrmModuleOptions = {
-  type: 'postgres', // Explicitly set the type as 'postgres'
+  type: 'postgres',
   host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT, 10) || 5432, // Ensure it's a number
+  port: parseInt(process.env.DB_PORT, 10) || 5432,
   username: process.env.DB_USERNAME || 'postgres',
   password: process.env.DB_PASSWORD || 'password',
   database: process.env.DB_NAME || 'academic_results',
-  entities: [Student, Result, Session, Semester, Course], // Explicitly register entities
-  synchronize: process.env.DB_SYNCHRONIZE === 'true', // Convert to boolean
+  entities: [Student, Result, Session, Semester, Course],
+  synchronize: process.env.DB_SYNCHRONIZE === 'true',
   migrationsTableName: 'academy_table',
-  migrations: ['dist/src/migrations/*{.ts,.js}'], // Adjust path if necessary
+  migrations: ['src/migrations/*{.ts,.js}'],
   migrationsRun: true,
   cache: {
     type: 'database',
-    duration: 30000, // Cache duration in milliseconds
+    duration: 30000,
     ignoreErrors: true,
   },
 };
