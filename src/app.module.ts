@@ -5,7 +5,7 @@ import { ResultsModule } from './module/results/results.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
-import dbconfig from 'ormconfig';
+import dbconfig from 'src/config/ormconfig';
 
 @Module({
   imports: [
