@@ -58,14 +58,12 @@ export class ResultsController {
   }
 
   @Get(':id')
-  @HttpCode(HttpStatus.OK)
   async getResultById(@Param('id') id: number) {
     this.logger.log(`Fetching result with id ${id}`);
     return this.resultsService.getResultById(id);
   }
 
   @Patch(':id')
-  @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async updateResult(
     @Param('id') id: number,
