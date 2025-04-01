@@ -166,33 +166,6 @@ export class ResultService {
     });
   }
 
-  // async updateResult(id: number, updateResultDto: Partial<CreateResultDto>) {
-  //   const existingResult = await this.resultRepo.findOne({
-  //     where: { id: id.toString() },
-  //     relations: ['semester'],
-  //   });
-  //   if (!existingResult) {
-  //     throw new NotFoundException(`Result with ID ${id} not found`);
-  //   }
-
-  //   if (updateResultDto.semester) {
-  //     let semester = await this.semesterRepo.findOne({
-  //       where: { name: updateResultDto.semester },
-  //     });
-  //     if (!semester) {
-  //       semester = this.semesterRepo.create({ name: updateResultDto.semester });
-  //       await this.semesterRepo.save(semester);
-  //     }
-  //     existingResult.semester = semester;
-  //   }
-
-  //   Object.assign(existingResult, updateResultDto);
-  //   await this.resultRepo.save(existingResult);
-  //   return this.resultRepo.findOne({
-  //     where: { id: id.toString() },
-  //     relations: ['student', 'semester'],
-  //   });
-  // }
   async delete(id: number) {
     const result = await this.resultRepo.findOne({
       where: { id: id.toString() },
